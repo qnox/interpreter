@@ -13,7 +13,7 @@ class InterpreterVisitor(
         return tree.accept(this)
     }
 
-    override fun visitChildren(node: RuleNode): Any {
+    override fun visitChildren(node: RuleNode): Any? {
         return when (node) {
             is langParser.ProgramContext -> {
                 node.children?.forEach { it.accept(this) }

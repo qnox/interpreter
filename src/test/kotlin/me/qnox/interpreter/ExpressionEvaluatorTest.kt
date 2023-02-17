@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
+import java.util.stream.Stream
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -67,13 +68,13 @@ class ExpressionEvaluatorTest {
 
     @Test
     fun `should return integers in range`() {
-        val seq = eval("{-1 , 1}") as Sequence<BigDecimal>
+        val seq = eval("{-1 , 1}") as Stream<BigDecimal>
         assertContentEquals(listOf(BigDecimal(-1), BigDecimal(0), BigDecimal(1)), seq.toList())
     }
 
     @Test
     fun `should return mapped integers in range`() {
-        val seq = eval("map({-1 , 1}, i -> i * 2)") as Sequence<BigDecimal>
+        val seq = eval("map({-1 , 1}, i -> i * 2)") as Stream<BigDecimal>
         assertContentEquals(listOf(BigDecimal(-2), BigDecimal(0), BigDecimal(2)), seq.toList())
     }
 
@@ -93,7 +94,7 @@ class ExpressionEvaluatorTest {
     private fun eval(input: String, variables: List<Pair<String, Any>> = emptyList()): Any {
         val parser = createParser(input)
         val expr = parser.expr()
-        return expressionEvaluator.evaluate(expr, EvaluationContext(*variables.toTypedArray()))
+        return expressionEvaluator.evaluate(expr, EvaluationContext(mapOf(*variables.toTypedArray())))
     }
 
     private fun createParser(input: String): langParser {

@@ -5,6 +5,7 @@ import langParser
 import langParser.ExprContext
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.util.stream.Stream
 
 class ExpressionEvaluator {
 
@@ -36,10 +37,8 @@ class ExpressionEvaluator {
             is langParser.MapExprContext -> {
                 val sequence = evaluate(node.input, evaluationContext).asSequence(node.input)
                 val variable = node.v.text
-                val mapContext = EvaluationContext()
                 sequence.map { v ->
-                    mapContext.assign(variable, v)
-                    evaluate(node.op, mapContext)
+                    evaluate(node.op, EvaluationContext(mapOf(variable to v)))
                 }
             }
 
@@ -47,12 +46,17 @@ class ExpressionEvaluator {
                 val sequence = evaluate(node.input, evaluationContext).asSequence(node.input)
                 val accumulator = node.acc.text
                 val value = node.v.text
-                val reduceContext = EvaluationContext()
                 sequence.reduce { acc, v ->
-                    reduceContext.assign(accumulator, acc)
-                    reduceContext.assign(value, v)
-                    evaluate(node.op, reduceContext)
-                }
+                    evaluate(
+                        node.op,
+                        EvaluationContext(
+                            mapOf(
+                                accumulator to acc,
+                                value to v
+                            )
+                        )
+                    )
+                }.orElse(BigDecimal.ZERO)
             }
 
             is langParser.MulExprContext -> {
@@ -76,9 +80,12 @@ class ExpressionEvaluator {
             is langParser.RangeExprContext -> {
                 val from = evaluate(node.from, evaluationContext).asBigDecimal(node.from)
                 val to = evaluate(node.to, evaluationContext).asBigDecimal(node.to)
-                generateSequence(from.toBigInteger()) { v ->
-                    v.add(BigInteger.ONE).takeIf { it <= to.toBigInteger() }
-                }.map { it.toBigDecimal(mathContext = evaluationContext.mathContext) }
+                Stream.iterate(from.toBigInteger()) { v ->
+                    v.add(BigInteger.ONE)
+                }
+                    .takeWhile { it <= to.toBigInteger() }
+                    .map { it.toBigDecimal(mathContext = evaluationContext.mathContext) }
+                    .parallel()
             }
 
             else -> {
@@ -88,9 +95,9 @@ class ExpressionEvaluator {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun Any?.asSequence(context: ExprContext): Sequence<Any> {
-        return if (this is Sequence<*>) {
-            this as Sequence<Any>
+    private fun Any?.asSequence(context: ExprContext): Stream<Any> {
+        return if (this is Stream<*>) {
+            this as Stream<Any>
         } else {
             reportTypeMismatch(context, "sequence", this)
         }
@@ -115,7 +122,7 @@ class ExpressionEvaluator {
             "number"
         }
 
-        is Sequence<*> -> {
+        is Stream<*> -> {
             "sequence"
         }
 
