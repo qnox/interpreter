@@ -1,5 +1,7 @@
 package me.qnox.interpreter
 
+import me.qnox.interpreter.parser.Parser
+import me.qnox.interpreter.parser.ParsingException
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -1,4 +1,4 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.evaluator
 
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.RuleNode

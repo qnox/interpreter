@@ -1,4 +1,4 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.evaluator
 
 import ch.obermuhlner.math.big.BigDecimalMath.pow
 import langParser
@@ -7,6 +7,14 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.stream.Stream
 
+/**
+ * Calculates expressions for grammar parsed by [me.qnox.interpreter.parser.Parser] and returns the following result
+ * types:
+ *  * [BigDecimal] for numbers
+ *  * [Stream] for sequences and ranges
+ *
+ * `map` and `reduce` functions are calculation is based on parallel streams.
+ */
 class ExpressionEvaluator {
 
     fun evaluate(node: ExprContext, evaluationContext: EvaluationContext): Any {

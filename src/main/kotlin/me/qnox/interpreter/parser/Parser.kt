@@ -1,4 +1,4 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.parser
 
 import langLexer
 import langParser
@@ -6,8 +6,22 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.InputStream
 
+/**
+ * Antlr4 based grammar parser. Supports a grammar represented as pseudo BNF:
+ * ```
+ * expr ::= expr op expr | (expr) | identifier | { expr, expr } | number | map(expr, identifier -> expr) | reduce(expr, expr, identifier identifier -> expr)
+ * op ::= + | - | * | / | ^
+ * stmt ::= var identifier = expr | out expr | print "string"
+ * program ::= stmt | program stmt
+ * ```
+ */
 class Parser {
 
+    /**
+     * Parses program from input stream and returns Antlr4 generated Rule Context Tree
+     *
+     * @throws ParsingException if syntax error was occurred.
+     */
     fun parse(inputStream: InputStream): langParser.ProgramContext {
         val lexer = langLexer(CharStreams.fromStream(inputStream))
         val parser = langParser(CommonTokenStream(lexer))

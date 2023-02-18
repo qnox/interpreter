@@ -1,4 +1,4 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.evaluator
 
 import java.math.MathContext
 import java.math.RoundingMode
@@ -11,10 +11,6 @@ class EvaluationContext(variables: Map<String, Any> = emptyMap()) {
 
     fun assign(identifier: String, value: Any) {
         variables[identifier] = value
-    }
-
-    fun derive(innerVariables: Map<String, Any>): EvaluationContext {
-        return EvaluationContext(variables + innerVariables)
     }
 
     fun getValueOrElse(identifier: String, defaultValue: () -> Any): Any {

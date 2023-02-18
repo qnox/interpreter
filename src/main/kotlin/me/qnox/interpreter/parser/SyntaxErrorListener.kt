@@ -1,4 +1,4 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.parser
 
 import org.antlr.v4.runtime.BaseErrorListener
 import org.antlr.v4.runtime.RecognitionException

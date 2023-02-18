@@ -2,6 +2,9 @@ package me.qnox.interpreter
 
 import langLexer
 import langParser
+import me.qnox.interpreter.evaluator.EvaluationContext
+import me.qnox.interpreter.evaluator.EvaluationException
+import me.qnox.interpreter.evaluator.ExpressionEvaluator
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.junit.jupiter.api.assertThrows

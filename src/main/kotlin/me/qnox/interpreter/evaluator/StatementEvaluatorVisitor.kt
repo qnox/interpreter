@@ -1,19 +1,21 @@
-package me.qnox.interpreter
+package me.qnox.interpreter.evaluator
 
 import langParser
+import me.qnox.interpreter.IO
 import org.antlr.v4.runtime.tree.*
 
-class InterpreterVisitor(
-    private val expressionEvaluator: ExpressionEvaluator = ExpressionEvaluator(),
+class StatementEvaluatorVisitor(
     private val evaluationContext: EvaluationContext = EvaluationContext(),
     private val io: IO = IO()
 ) : ParseTreeVisitor<Any> {
+
+    private val expressionEvaluator: ExpressionEvaluator = ExpressionEvaluator()
 
     override fun visit(tree: ParseTree): Any? {
         return tree.accept(this)
     }
 
-    override fun visitChildren(node: RuleNode): Any? {
+    override fun visitChildren(node: RuleNode): Any {
         return when (node) {
             is langParser.ProgramContext -> {
                 node.children?.forEach { it.accept(this) }
