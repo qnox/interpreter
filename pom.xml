@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.qnox</groupId>
-    <artifactId>jb</artifactId>
+    <artifactId>interpreter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -15,6 +15,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <antlr4.version>4.7.1</antlr4.version>
     </properties>
 
     <dependencyManagement>
@@ -43,7 +44,7 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>4.7.1</version>
+            <version>${antlr4.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -92,14 +93,7 @@
             <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
-                <version>4.7.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.strumenta.antlr-kotlin</groupId>
-                        <artifactId>antlr-kotlin-target</artifactId>
-                        <version>b5135079b8</version>
-                    </dependency>
-                </dependencies>
+                <version>${antlr4.version}</version>
                 <executions>
                     <execution>
                         <id>antlr-java</id>
@@ -110,31 +104,31 @@
                             <arguments>-Dlanguage=Java</arguments>
                         </configuration>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>me.qnox.interpreter.InterpreterKt</mainClass>
+                        </transformer>
+                    </transformers>
+                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                </configuration>
+                <executions>
                     <execution>
-                        <id>antlr-kotlin</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>antlr4</goal>
+                            <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <arguments>-Dlanguage=Kotlin</arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>
