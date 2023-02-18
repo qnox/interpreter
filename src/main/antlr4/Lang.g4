@@ -1,5 +1,9 @@
 grammar Lang;
 
+@header {
+package me.qnox.interpreter.parser.antlr4;
+}
+
 program
     : stmt
     | program stmt

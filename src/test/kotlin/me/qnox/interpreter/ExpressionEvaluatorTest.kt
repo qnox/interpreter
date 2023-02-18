@@ -1,10 +1,10 @@
 package me.qnox.interpreter
 
-import LangLexer
-import LangParser
 import me.qnox.interpreter.evaluator.EvaluationContext
 import me.qnox.interpreter.evaluator.EvaluationException
 import me.qnox.interpreter.evaluator.ExpressionEvaluator
+import me.qnox.interpreter.parser.antlr4.LangLexer
+import me.qnox.interpreter.parser.antlr4.LangParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.junit.jupiter.api.assertThrows
@@ -70,12 +70,14 @@ class ExpressionEvaluatorTest {
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should return integers in range`() {
         val seq = eval("{-1 , 1}") as Stream<BigDecimal>
         assertContentEquals(listOf(BigDecimal(-1), BigDecimal(0), BigDecimal(1)), seq.toList())
     }
 
     @Test
+    @Suppress("UNCHECKED_CAST")
     fun `should return mapped integers in range`() {
         val seq = eval("map({-1 , 1}, i -> i * 2)") as Stream<BigDecimal>
         assertContentEquals(listOf(BigDecimal(-2), BigDecimal(0), BigDecimal(2)), seq.toList())

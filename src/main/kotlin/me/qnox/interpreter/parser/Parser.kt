@@ -1,7 +1,7 @@
 package me.qnox.interpreter.parser
 
-import LangLexer
-import LangParser
+import me.qnox.interpreter.parser.antlr4.LangLexer
+import me.qnox.interpreter.parser.antlr4.LangParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.InputStream

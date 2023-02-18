@@ -1,6 +1,7 @@
 package me.qnox.interpreter.evaluator
 
 import me.qnox.interpreter.IO
+import me.qnox.interpreter.parser.antlr4.LangParser
 
 /**
  * Rule Context Tree based program evaluator for grammar parsed by [me.qnox.interpreter.parser.Parser].

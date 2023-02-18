@@ -1,6 +1,7 @@
 package me.qnox.interpreter.evaluator
 
 import ch.obermuhlner.math.big.BigDecimalMath.pow
+import me.qnox.interpreter.parser.antlr4.LangParser
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.stream.Stream
