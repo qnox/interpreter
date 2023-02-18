@@ -1,8 +1,6 @@
 package me.qnox.interpreter.evaluator
 
 import ch.obermuhlner.math.big.BigDecimalMath.pow
-import langParser
-import langParser.ExprContext
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.stream.Stream
@@ -17,13 +15,13 @@ import java.util.stream.Stream
  */
 class ExpressionEvaluator {
 
-    fun evaluate(node: ExprContext, evaluationContext: EvaluationContext): Any {
+    fun evaluate(node: LangParser.ExprContext, evaluationContext: EvaluationContext): Any {
         return when (node) {
-            is langParser.NumberExprContext -> {
+            is LangParser.NumberExprContext -> {
                 node.number.text.toBigDecimal()
             }
 
-            is langParser.UnaryExprContext -> {
+            is LangParser.UnaryExprContext -> {
                 val v = evaluate(node.v, evaluationContext).asBigDecimal(node.v)
                 when (node.op.text) {
                     "-" -> v.negate()
@@ -31,18 +29,18 @@ class ExpressionEvaluator {
                 }
             }
 
-            is langParser.ParenthisedExprContext -> {
+            is LangParser.ParenthisedExprContext -> {
                 evaluate(node.expression, evaluationContext)
             }
 
-            is langParser.IdentifierExprContext -> {
+            is LangParser.IdentifierExprContext -> {
                 val identifier = node.identifier.text
                 evaluationContext.getValueOrElse(identifier) {
                     reportError(node, "Unknown variable '$identifier'")
                 }
             }
 
-            is langParser.MapExprContext -> {
+            is LangParser.MapExprContext -> {
                 val sequence = evaluate(node.input, evaluationContext).asSequence(node.input)
                 val variable = node.v.text
                 sequence.map { v ->
@@ -50,7 +48,7 @@ class ExpressionEvaluator {
                 }
             }
 
-            is langParser.ReduceExprContext -> {
+            is LangParser.ReduceExprContext -> {
                 val sequence = evaluate(node.input, evaluationContext).asSequence(node.input)
                 val accumulator = node.acc.text
                 val value = node.v.text
@@ -67,25 +65,25 @@ class ExpressionEvaluator {
                 }.orElse(BigDecimal.ZERO)
             }
 
-            is langParser.MulExprContext -> {
+            is LangParser.MulExprContext -> {
                 val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
                 val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
                 evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
             }
 
-            is langParser.AddExprContext -> {
+            is LangParser.AddExprContext -> {
                 val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
                 val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
                 evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
             }
 
-            is langParser.PowExprContext -> {
+            is LangParser.PowExprContext -> {
                 val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
                 val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
                 evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
             }
 
-            is langParser.RangeExprContext -> {
+            is LangParser.RangeExprContext -> {
                 val from = evaluate(node.from, evaluationContext).asBigDecimal(node.from)
                 val to = evaluate(node.to, evaluationContext).asBigDecimal(node.to)
                 Stream.iterate(from.toBigInteger()) { v ->
@@ -103,7 +101,7 @@ class ExpressionEvaluator {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun Any?.asSequence(context: ExprContext): Stream<Any> {
+    private fun Any?.asSequence(context: LangParser.ExprContext): Stream<Any> {
         return if (this is Stream<*>) {
             this as Stream<Any>
         } else {
@@ -111,7 +109,7 @@ class ExpressionEvaluator {
         }
     }
 
-    private fun Any?.asBigDecimal(context: ExprContext): BigDecimal {
+    private fun Any?.asBigDecimal(context: LangParser.ExprContext): BigDecimal {
         return if (this is BigDecimal) {
             this
         } else {
@@ -119,7 +117,7 @@ class ExpressionEvaluator {
         }
     }
 
-    private fun reportTypeMismatch(context: ExprContext, expected: String, actual: Any?): Nothing {
+    private fun reportTypeMismatch(context: LangParser.ExprContext, expected: String, actual: Any?): Nothing {
         val errorMessage = "Expected $expected but was ${typeName(actual)}"
         reportError(context, errorMessage)
     }
@@ -144,7 +142,7 @@ class ExpressionEvaluator {
         v2: BigDecimal,
         op: String,
         evaluationContext: EvaluationContext,
-        context: ExprContext
+        context: LangParser.ExprContext
     ) =
         when (op) {
             "+" -> v1.plus(v2)

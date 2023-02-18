@@ -1,6 +1,5 @@
 package me.qnox.interpreter.evaluator
 
-import langParser
 import me.qnox.interpreter.IO
 
 /**
@@ -12,7 +11,7 @@ class ProgramEvaluator(
     private val io: IO = IO()
 ) {
 
-    fun evaluate(program: langParser.ProgramContext) {
+    fun evaluate(program: LangParser.ProgramContext) {
         StatementEvaluatorVisitor(io = io).visit(program)
     }
 }

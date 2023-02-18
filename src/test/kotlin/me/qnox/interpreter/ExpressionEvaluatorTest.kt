@@ -1,7 +1,7 @@
 package me.qnox.interpreter
 
-import langLexer
-import langParser
+import LangLexer
+import LangParser
 import me.qnox.interpreter.evaluator.EvaluationContext
 import me.qnox.interpreter.evaluator.EvaluationException
 import me.qnox.interpreter.evaluator.ExpressionEvaluator
@@ -100,9 +100,9 @@ class ExpressionEvaluatorTest {
         return expressionEvaluator.evaluate(expr, EvaluationContext(mapOf(*variables.toTypedArray())))
     }
 
-    private fun createParser(input: String): langParser {
-        val lexer = langLexer(CharStreams.fromString(input))
-        return langParser(CommonTokenStream(lexer))
+    private fun createParser(input: String): LangParser {
+        val lexer = LangLexer(CharStreams.fromString(input))
+        return LangParser(CommonTokenStream(lexer))
     }
 
     private fun Any?.stripTrailingZerosIfBigDecimal() = if (this is BigDecimal) {

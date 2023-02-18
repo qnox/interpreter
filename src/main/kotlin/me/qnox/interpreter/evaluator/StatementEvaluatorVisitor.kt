@@ -1,6 +1,5 @@
 package me.qnox.interpreter.evaluator
 
-import langParser
 import me.qnox.interpreter.IO
 import org.antlr.v4.runtime.tree.*
 
@@ -17,31 +16,26 @@ class StatementEvaluatorVisitor(
 
     override fun visitChildren(node: RuleNode): Any {
         return when (node) {
-            is langParser.ProgramContext -> {
+            is LangParser.ProgramContext -> {
                 node.children?.forEach { it.accept(this) }
                 Unit
             }
 
-            is langParser.StmtContext -> {
-                node.children?.forEach { it.accept(this) }
-                Unit
-            }
-
-            is langParser.PrintContext -> {
+            is LangParser.PrintContext -> {
                 val quotedString = node.quotedString.text
                 io.out.print(quotedString.substring(1, quotedString.length - 1))
             }
 
-            is langParser.OutContext -> {
+            is LangParser.OutContext -> {
                 val result = node.value.accept(this)
                 io.out.print(result)
             }
 
-            is langParser.ExprContext -> {
+            is LangParser.ExprContext -> {
                 expressionEvaluator.evaluate(node, evaluationContext)
             }
 
-            is langParser.AssignmentContext -> {
+            is LangParser.AssignmentContext -> {
                 evaluationContext.assign(node.variable.text, node.value.accept(this))
             }
 

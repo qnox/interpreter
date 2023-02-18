@@ -1,4 +1,4 @@
-grammar lang;
+grammar Lang;
 
 program
     : stmt
@@ -6,21 +6,9 @@ program
     ;
 
 stmt
-    : assignment
-    | out
-    | print
-    ;
-
-assignment
-    : VAR variable=IDENTIFIER EQ value=expr
-    ;
-
-out
-    : OUT value=expr
-    ;
-
-print
-    : PRINT quotedString=STRING
+    : VAR variable=IDENTIFIER EQ value=expr #Assignment
+    | OUT value=expr #Out
+    | PRINT quotedString=STRING #Print
     ;
 
 expr

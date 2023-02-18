@@ -1,7 +1,7 @@
 package me.qnox.interpreter.parser
 
-import langLexer
-import langParser
+import LangLexer
+import LangParser
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import java.io.InputStream
@@ -22,9 +22,9 @@ class Parser {
      *
      * @throws ParsingException if syntax error was occurred.
      */
-    fun parse(inputStream: InputStream): langParser.ProgramContext {
-        val lexer = langLexer(CharStreams.fromStream(inputStream))
-        val parser = langParser(CommonTokenStream(lexer))
+    fun parse(inputStream: InputStream): LangParser.ProgramContext {
+        val lexer = LangLexer(CharStreams.fromStream(inputStream))
+        val parser = LangParser(CommonTokenStream(lexer))
         parser.removeErrorListeners()
         val syntaxErrorListener = SyntaxErrorListener()
         parser.addErrorListener(syntaxErrorListener)
