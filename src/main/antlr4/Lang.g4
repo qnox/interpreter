@@ -18,9 +18,9 @@ stmt
 expr
     : number=NUMBER #NumberExpr
     | identifier=IDENTIFIER #IdentifierExpr
-    | <assoc=right> v1=expr op=POW v2=expr #PowExpr
-    | v1=expr op=(TIMES | DIV) v2=expr #MulExpr
-    | v1=expr op=(PLUS | MINUS) v2=expr #AddExpr
+    | <assoc=right> v1=expr op=POW v2=expr #BinaryExpr
+    | v1=expr op=(TIMES | DIV) v2=expr #BinaryExpr
+    | v1=expr op=(PLUS | MINUS) v2=expr #BinaryExpr
     | op=(PLUS | MINUS) v=expr #UnaryExpr
     | LPAREN expression=expr RPAREN #ParenthisedExpr
     | LCURLY from=expr COMMA to=expr RCURLY #RangeExpr

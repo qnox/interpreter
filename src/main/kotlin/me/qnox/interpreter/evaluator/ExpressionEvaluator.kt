@@ -66,19 +66,7 @@ class ExpressionEvaluator {
                 }.orElse(BigDecimal.ZERO)
             }
 
-            is LangParser.MulExprContext -> {
-                val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
-                val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
-                evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
-            }
-
-            is LangParser.AddExprContext -> {
-                val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
-                val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
-                evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
-            }
-
-            is LangParser.PowExprContext -> {
+            is LangParser.BinaryExprContext -> {
                 val v1 = evaluate(node.v1, evaluationContext).asBigDecimal(node.v1)
                 val v2 = evaluate(node.v2, evaluationContext).asBigDecimal(node.v2)
                 evaluateBinaryOperation(v1, v2, node.op.text, evaluationContext, node)
